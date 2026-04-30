@@ -233,4 +233,8 @@ class ChatbotModel(nn.Module):
 
     def bag_of_words(self, words):
         return [1 if word in words else 0 for word in self.vocabulary]
+
+        
+    def bag_of_words(self, words):
+        return [1 if word in words else 0 for word in self.vocabulary]
 """
