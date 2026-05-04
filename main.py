@@ -235,6 +235,22 @@ class ChatbotModel(nn.Module):
         return [1 if word in words else 0 for word in self.vocabulary]
 
         
-    def bag_of_words(self, words):
-        return [1 if word in words else 0 for word in self.vocabulary]
+    def parse_intents(self):
+        lemmatizer = nltk.WordNetLemmatizer()
+
+        if os.path.exists(self.intents_path):
+            with open(self.intents_path, 'r') as f:
+                intents_data = json.load(f)
+
+            for intent in intents_data['intents']:
+                if intent['tag'] not in self.intents:
+                    self.intents.append(intent['tag'])
+                    self.intents_responses[intent['tag']] = intent['responses']
+
+                for pattern in intent['patterns']:
+                    pattern_words = self.tokenize_and_lemmatize(pattern)
+                    self.vocabulary.extend(pattern_words)
+                    self.documents.append((pattern_words, intent['tag']))
+
+                self.vocabulary = sorted(set(self.vocabulary))
 """
